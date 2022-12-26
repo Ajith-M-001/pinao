@@ -1,43 +1,41 @@
 const pianoKeys = document.querySelectorAll(".piano-keys .key"),
-    volumeSlider = document.querySelector(".volume-slider input"),
-    keysCheckBox = document.querySelector(".key-checkbox input");
+volumeSlider = document.querySelector(".volume-slider input"),
+keysCheckbox = document.querySelector(".keys-checkbox input");
 
-
-let allKey = [];
-let audio = new Audio("tunes/a.wav"); //by default , audio src is "a" tune
+let allKeys = [],
+audio = new Audio(`tunes/a.wav`); // by default, audio src is "a" tune
 
 const playTune = (key) => {
-    audio.src = `tunes/${key}.wav`;
-    audio.play(); // playing audio 
-    console.log(allKey);
+    audio.src = `tunes/${key}.wav`; // passing audio src based on key pressed 
+    audio.play(); // playing audio
 
-    const clickedKey = document.querySelector(`[data-key="${key}"]`);
+    const clickedKey = document.querySelector(`[data-key="${key}"]`); // getting clicked key element
     clickedKey.classList.add("active"); // adding active class to the clicked key element
-    setTimeout(() => {
-        clickedKey.classList.remove("active"); // removinf active class 150ms from the clicked key element
-    }, 150)
+    setTimeout(() => { // removing active class after 150 ms from the clicked key element
+        clickedKey.classList.remove("active");
+    }, 150);
 }
 
 pianoKeys.forEach(key => {
-    allKey.push(key.dataset.key); // adding data-key value to the allKey array
+    allKeys.push(key.dataset.key); // adding data-key value to the allKeys array
     // calling playTune function with passing data-key value as an argument
-    key.addEventListener("click", () => playTune(key.dataset.key))
+    key.addEventListener("click", () => playTune(key.dataset.key));
 });
 
+const handleVolume = (e) => {
+    audio.volume = e.target.value; // passing the range slider value as an audio volume
+}
+
 const showHideKeys = () => {
-    // toggle hide class from each key on the checkbox click
+    // toggling hide class from each key on the checkbox click
     pianoKeys.forEach(key => key.classList.toggle("hide"));
 }
 
-const handleVolume = (e) => {
-    audio.volume = e.target.value;  // passing the range slider value as an audio volume
-}
-
 const pressedKey = (e) => {
-    // if the pressed key is in the allkey array, only call the playTune function
-    if (allKey.includes(e.key)) playTune(e.key);
+    // if the pressed key is in the allKeys array, only call the playTune function
+    if(allKeys.includes(e.key)) playTune(e.key);
 }
 
-document.addEventListener("keydown", pressedKey);
+keysCheckbox.addEventListener("click", showHideKeys);
 volumeSlider.addEventListener("input", handleVolume);
-keysCheckBox.addEventListener("click", showHideKeys);
+document.addEventListener("keydown", pressedKey);
